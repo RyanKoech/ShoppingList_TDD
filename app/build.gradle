@@ -57,6 +57,7 @@ dependencies {
 
     // Room
     implementation "androidx.room:room-runtime:2.2.5"
+    testImplementation project(path: ':app')
     androidTestImplementation project(path: ':app')
     kapt "androidx.room:room-compiler:2.2.5"
 

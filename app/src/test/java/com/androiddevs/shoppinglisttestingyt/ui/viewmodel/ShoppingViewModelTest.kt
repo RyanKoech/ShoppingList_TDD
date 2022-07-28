@@ -81,4 +81,20 @@ class ShoppingViewModelTest {
         assertThat(value.getContentIfNotHandled()?.status).isEqualTo(Status.SUCCESS)
     }
 
+    @Test
+    fun `passed image url string is observed in the livedata, returns same image url`() {
+        val string  = "some_url"
+        viewModel.setCurrentImageUrl(string)
+        val currentImageUrl = viewModel.currentImageUrl.getOrAwaitValueTest()
+        assertThat(currentImageUrl).isEqualTo(string)
+    }
+
+    @Test
+    fun `upon inserting shopping item current Image url is set to empty, returns true`() {
+        viewModel.insertShoppingItem("name", "4", "12.6")
+        val currentImageUrl : String = viewModel.currentImageUrl.getOrAwaitValueTest()
+
+        assertThat(currentImageUrl).isEmpty()
+    }
+
 }

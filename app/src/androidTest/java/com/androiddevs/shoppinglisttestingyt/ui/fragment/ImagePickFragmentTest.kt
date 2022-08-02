@@ -1,11 +1,12 @@
 package com.androiddevs.shoppinglisttestingyt.ui.fragment
 
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.fragment.app.FragmentFactory
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
@@ -14,7 +15,7 @@ import com.androiddevs.shoppinglisttestingyt.adapter.ImageAdapter
 import com.androiddevs.shoppinglisttestingyt.getOrAwaitValue
 import com.androiddevs.shoppinglisttestingyt.launchFragmentInHiltContainer
 import com.androiddevs.shoppinglisttestingyt.repository.FakeShoppingRepositoryAndroidTest
-import com.androiddevs.shoppinglisttestingyt.ui.fragment.factory.ShoppingFragmentFactory
+import com.androiddevs.shoppinglisttestingyt.ui.fragment.factory.AndroidTestShoppingFragmentFactory
 import com.androiddevs.shoppinglisttestingyt.ui.viewmodel.ShoppingViewModel
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -39,7 +40,7 @@ class ImagePickFragmentTest {
     var hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var fragmentFactory: ShoppingFragmentFactory
+    lateinit var androidTestShoppingFragmentFactory: AndroidTestShoppingFragmentFactory
 
     @Before
     fun setUp() {
@@ -51,7 +52,7 @@ class ImagePickFragmentTest {
         val navController = mock(NavController::class.java)
         val imageUrl = "test"
         val testViewModel = ShoppingViewModel(FakeShoppingRepositoryAndroidTest())
-        launchFragmentInHiltContainer<ImagePickFragment>(fragmentFactory = fragmentFactory) {
+        launchFragmentInHiltContainer<ImagePickFragment>(fragmentFactory = androidTestShoppingFragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             imageAdapter.images = listOf(imageUrl)
             viewModel = testViewModel
@@ -69,4 +70,49 @@ class ImagePickFragmentTest {
 
     }
 
+    @Test
+    fun replaceText_imagesResponseValueIsSet() {
+        val navController = mock(NavController::class.java)
+        val text = "apple"
+        var textViewModel : ShoppingViewModel? = null
+        launchFragmentInHiltContainer<ImagePickFragment>(
+            fragmentFactory = androidTestShoppingFragmentFactory
+        ) {
+            Navigation.setViewNavController(requireView(), navController)
+            textViewModel = viewModel
+        }
+
+        onView(withId(R.id.etSearch)).perform(
+            replaceText(text)
+        )
+
+        assertThat(textViewModel!!.images.getOrAwaitValue()).isNotNull()
+    }
+//
+//    @Test
+//    fun replaceText_adapterListIsNotEmpty() {
+//        val navController = mock(NavController::class.java)
+//        val text = "apple"
+//        var textViewModel : ShoppingViewModel? = null
+//        var testImageAdapter: ImageAdapter? = null
+//        launchFragmentInHiltContainer<ImagePickFragment>(
+//            fragmentFactory = androidTestShoppingFragmentFactory
+//        ) {
+//            Navigation.setViewNavController(requireView(), navController)
+//            textViewModel = viewModel
+//            testImageAdapter = imageAdapter
+//        }
+//
+//        onView(withId(R.id.etSearch)).perform(
+//            replaceText(text)
+//        )
+//        var images = textViewModel!!.images.getOrAwaitValue()
+//        Log.d("TESTING_", images.peekContent().status.name)
+//        images = textViewModel!!.images.getOrAwaitValue()
+//        Log.d("TESTING_", images.peekContent().status.name)
+//        textViewModel!!.images.getOrAwaitValue {
+//            Log.d("TESTING_", testImageAdapter!!.images.toString())
+//            assertThat(testImageAdapter!!.images).isNotEmpty()
+//        }
+//    }
 }

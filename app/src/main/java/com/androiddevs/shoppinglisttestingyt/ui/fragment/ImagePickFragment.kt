@@ -26,15 +26,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ImagePickFragment @Inject constructor(
-    val imageAdapter: ImageAdapter
+    val imageAdapter: ImageAdapter,
+    var viewModel: ShoppingViewModel? = null
 ) : Fragment(R.layout.fragment_image_pick) {
-
-    lateinit var viewModel: ShoppingViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity()).get(ShoppingViewModel::class.java)
+        viewModel = viewModel ?: ViewModelProvider(requireActivity()).get(ShoppingViewModel::class.java)
         setUpRecyclerView()
         subscribeToObservers()
 
@@ -45,7 +44,7 @@ class ImagePickFragment @Inject constructor(
                 delay(SEARCH_TIME_DELAY)
                 editable.let {
                     if(editable.toString().isNotEmpty()){
-                        viewModel.searchForImage(editable.toString())
+                        viewModel?.searchForImage(editable.toString())
                     }
                 }
             }
@@ -53,7 +52,7 @@ class ImagePickFragment @Inject constructor(
 
         imageAdapter.setOnItemClickListner {
             findNavController().popBackStack()
-            viewModel.setCurrentImageUrl(it)
+            viewModel?.setCurrentImageUrl(it)
         }
     }
 
@@ -65,7 +64,7 @@ class ImagePickFragment @Inject constructor(
     }
 
     private fun subscribeToObservers() {
-        viewModel.images.observe(viewLifecycleOwner, Observer{
+        viewModel!!.images.observe(viewLifecycleOwner, Observer{
             it?.getContentIfNotHandled()?.let { result ->
                 when(result.status){
                     Status.SUCCESS -> {

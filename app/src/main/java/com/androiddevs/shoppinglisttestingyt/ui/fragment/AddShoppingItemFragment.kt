@@ -12,13 +12,14 @@ import com.androiddevs.shoppinglisttestingyt.other.Status
 import com.androiddevs.shoppinglisttestingyt.ui.viewmodel.ShoppingViewModel
 import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_shopping_item.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class AddShoppingItemFragment @Inject constructor(
     val glide : RequestManager
-
 ) : Fragment(R.layout.fragment_add_shopping_item) {
 
     lateinit var viewModel: ShoppingViewModel

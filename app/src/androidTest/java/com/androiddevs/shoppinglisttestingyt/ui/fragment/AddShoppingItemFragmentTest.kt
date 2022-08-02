@@ -14,7 +14,7 @@ import com.androiddevs.shoppinglisttestingyt.data.local.ShoppingItem
 import com.androiddevs.shoppinglisttestingyt.getOrAwaitValue
 import com.androiddevs.shoppinglisttestingyt.launchFragmentInHiltContainer
 import com.androiddevs.shoppinglisttestingyt.repository.FakeShoppingRepositoryAndroidTest
-import com.androiddevs.shoppinglisttestingyt.ui.fragment.factory.ShoppingFragmentFactory
+import com.androiddevs.shoppinglisttestingyt.ui.fragment.factory.AndroidTestShoppingFragmentFactory
 import com.androiddevs.shoppinglisttestingyt.ui.viewmodel.ShoppingViewModel
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -39,7 +39,7 @@ class AddShoppingItemFragmentTest {
     var hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var fragmentFactory: ShoppingFragmentFactory
+    lateinit var androidTestShoppingFragmentFactory: AndroidTestShoppingFragmentFactory
 
     @Before
     fun setUp() {
@@ -49,7 +49,9 @@ class AddShoppingItemFragmentTest {
     @Test
     fun pressBackButton_popBackStack() {
         val navController = mock(NavController::class.java)
-        launchFragmentInHiltContainer<AddShoppingItemFragment> {
+        launchFragmentInHiltContainer<AddShoppingItemFragment>(
+            fragmentFactory = androidTestShoppingFragmentFactory
+        ) {
             Navigation.setViewNavController(requireView(), navController)
         }
 
@@ -90,7 +92,7 @@ class AddShoppingItemFragmentTest {
     fun clickInsertIntoDb_shoppingItemInsertedIntoDb() {
         val testViewModel = ShoppingViewModel(FakeShoppingRepositoryAndroidTest())
         launchFragmentInHiltContainer<AddShoppingItemFragment>(
-            fragmentFactory = fragmentFactory
+            fragmentFactory = androidTestShoppingFragmentFactory
         ) {
             viewModel = testViewModel
         }

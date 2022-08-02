@@ -39,7 +39,7 @@ class ShoppingFragmentTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Inject
-    lateinit var testShoppingFragmentFactory: AndroidTestShoppingFragmentFactory
+    lateinit var androidTestShoppingFragmentFactory: AndroidTestShoppingFragmentFactory
 
     @Before
     fun setup() {
@@ -51,7 +51,9 @@ class ShoppingFragmentTest {
 
         val navController = mock(NavController::class.java)
 
-        launchFragmentInHiltContainer<ShoppingFragment> {
+        launchFragmentInHiltContainer<ShoppingFragment>(
+            fragmentFactory = androidTestShoppingFragmentFactory
+        ) {
             Navigation.setViewNavController(requireView(), navController)
         }
 
@@ -67,7 +69,7 @@ class ShoppingFragmentTest {
         var testViewModel : ShoppingViewModel? = null
 
         launchFragmentInHiltContainer<ShoppingFragment>(
-            fragmentFactory = testShoppingFragmentFactory
+            fragmentFactory = androidTestShoppingFragmentFactory
         ) {
             testViewModel = viewModel
             viewModel?.insertShoppingItemToDb(shoppingItem)

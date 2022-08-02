@@ -15,14 +15,14 @@ import com.androiddevs.shoppinglisttestingyt.R
 import com.androiddevs.shoppinglisttestingyt.adapters.ShoppingItemAdapter
 import com.androiddevs.shoppinglisttestingyt.ui.viewmodel.ShoppingViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_shopping.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ShoppingFragment @Inject constructor(
-
     val shoppingItemAdapter: ShoppingItemAdapter,
     var viewModel: ShoppingViewModel? = null
-
 ) : Fragment(R.layout.fragment_shopping) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
